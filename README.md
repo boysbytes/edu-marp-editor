@@ -1,20 +1,22 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Marp Editor
 
-# Run and deploy your AI Studio app
+A web-based editor for creating Marp presentations. This editor provides a user-friendly interface for managing slides, applying templates, and editing markdown content with a live preview.
 
-This contains everything you need to run your app locally.
+## Running Locally
 
-View your app in AI Studio: https://ai.studio/apps/drive/1unib4L3nd9uuahTuR__E_FEkL4Whx0Qe
+**Prerequisites:** [Node.js](https://nodejs.org/) must be installed.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+2.  **Set up environment variables:**
+    Create a `.env.local` file in the root of the project and add your Gemini API key:
+    ```
+    GEMINI_API_KEY=your_api_key
+    ```
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    This will start the application and make it accessible in your browser, typically at `http://localhost:5173`.
