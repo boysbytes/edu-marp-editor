@@ -6,6 +6,8 @@
 import React, { useState, useMemo, useRef, useLayoutEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Download, Settings, FileText, Columns2, Columns3, Layout, Menu, ZoomIn, ZoomOut, Shrink } from 'lucide-react';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 const MarpEditor = () => {
   const [slides, setSlides] = useState([
@@ -216,39 +218,23 @@ ${styleBlock}
   const convertMarkdownToHTML = (markdown) => {
     if (!markdown) return '';
     
-    function parseContent(md) {
-        const withParsedHtmlContent = md.replace(/(<div[^>]*>)([\s\S]*?)(<\/div>)/g, (match, openTag, innerContent, closeTag) => {
-            return openTag + parseContent(innerContent.trim()) + closeTag;
-        });
+    // Configure marked to handle line breaks like Marp's `breaks: true` for consistency.
+    const markedOptions = {
+      breaks: true,
+      gfm: true, // Use GitHub Flavored Markdown
+    };
 
-        const blocks = withParsedHtmlContent.split(/\n\n+/);
+    // Convert Markdown to HTML using the 'marked' library.
+    const dirtyHTML = marked.parse(markdown, markedOptions) as string;
 
-        const htmlBlocks = blocks.map(block => {
-            const trimmedBlock = block.trim();
-            if (!trimmedBlock) return '';
+    // Sanitize the HTML using DOMPurify to prevent XSS attacks.
+    // Allow 'div' tags and 'class' attributes for multi-column layouts.
+    const cleanHTML = DOMPurify.sanitize(dirtyHTML, {
+      ADD_TAGS: ['div'],
+      ADD_ATTR: ['class'],
+    });
 
-            if (trimmedBlock.startsWith('<div')) return trimmedBlock;
-            
-            if (trimmedBlock.startsWith('# ')) return `<h1>${trimmedBlock.substring(2)}</h1>`;
-            if (trimmedBlock.startsWith('## ')) return `<h2>${trimmedBlock.substring(3)}</h2>`;
-            if (trimmedBlock.startsWith('### ')) return `<h3>${trimmedBlock.substring(4)}</h3>`;
-
-            if (trimmedBlock.startsWith('- ')) {
-                const items = trimmedBlock.split('\n').map(line => `<li>${line.substring(2)}</li>`).join('');
-                return `<ul>${items}</ul>`;
-            }
-            
-            return `<p>${trimmedBlock.replace(/\n/g, '<br>')}</p>`;
-        });
-
-        let finalHtml = htmlBlocks.join('');
-        finalHtml = finalHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        finalHtml = finalHtml.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-        return finalHtml;
-    }
-
-    return parseContent(markdown);
+    return cleanHTML;
   };
 
   // --- Resizer Logic ---
