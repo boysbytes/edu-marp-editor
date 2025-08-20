@@ -248,11 +248,43 @@ ${styleBlock}
     // Convert Markdown to HTML using the 'marked' library.
     const dirtyHTML = marked.parse(markdown, markedOptions);
 
-    // Sanitize the HTML using DOMPurify to prevent XSS attacks.
-    // Allow 'div' tags and 'class' attributes for multi-column layouts.
+    // Enhanced DOMPurify configuration for comprehensive XSS protection
     const cleanHTML = DOMPurify.sanitize(dirtyHTML, {
-      ADD_TAGS: ['div'],
-      ADD_ATTR: ['class'],
+      // Allowed tags for markdown content and multi-column layouts
+      ALLOWED_TAGS: [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'p', 'br', 'hr',
+        'strong', 'b', 'em', 'i', 'u', 's', 'del', 'ins',
+        'ul', 'ol', 'li',
+        'blockquote', 'pre', 'code',
+        'a', 'img',
+        'table', 'thead', 'tbody', 'tr', 'th', 'td',
+        'div', 'span'
+      ],
+      // Allowed attributes with strict validation
+      ALLOWED_ATTR: [
+        'class', 'id',
+        'href', 'title', 'alt',
+        'src', 'width', 'height',
+        'colspan', 'rowspan'
+      ],
+      // Additional security configurations
+      ALLOW_DATA_ATTR: false,
+      ALLOW_UNKNOWN_PROTOCOLS: false,
+      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+      // Remove any script-related attributes
+      FORBID_ATTR: ['style', 'onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
+      // Remove script and other dangerous tags
+      FORBID_TAGS: ['script', 'object', 'embed', 'form', 'input', 'textarea', 'button', 'select', 'option'],
+      // Keep content of forbidden elements but remove the tags
+      KEEP_CONTENT: true,
+      // Return a DocumentFragment instead of string for better security
+      RETURN_DOM_FRAGMENT: false,
+      RETURN_DOM: false,
+      // Sanitize DOM after parsing
+      SANITIZE_DOM: true,
+      // Remove empty attributes
+      ALLOW_EMPTY_ATTR: false
     });
 
     return cleanHTML;
