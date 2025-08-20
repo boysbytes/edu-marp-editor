@@ -56,6 +56,7 @@ body {
   list-style-type: disc;
   padding-left: 1.75em;
   margin-bottom: 0.75em; /* was 1.25em */
+  text-align: left;
 }
 
 .prose li {
