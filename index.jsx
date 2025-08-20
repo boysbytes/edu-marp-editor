@@ -23,6 +23,7 @@ const MarpEditor = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [draggedSlide, setDraggedSlide] = useState(null);
 
   // State for resizable panels
   const [sidebarWidth, setSidebarWidth] = useState(256);
@@ -144,6 +145,26 @@ const MarpEditor = () => {
       icon: Columns3,
       content: '# Slide Title\n\n<div class="columns">\n\n<div class="col">\n\n## Column 1\n\n- Item 1\n- Item 2\n\n</div>\n\n<div class="col">\n\n## Column 2\n\n- Item A\n- Item B\n\n</div>\n\n<div class="col">\n\n## Column 3\n\n- Item X\n- Item Y\n\n</div>\n\n</div>'
     }
+  };
+
+  const handleDragStart = (e, index) => {
+    setDraggedSlide(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target);
+  };
+
+  const handleDragOver = (e) => {
+      e.preventDefault();
+  };
+
+  const handleDrop = (e, index) => {
+      const newSlides = [...slides];
+      const draggedItem = newSlides[draggedSlide];
+      newSlides.splice(draggedSlide, 1);
+      newSlides.splice(index, 0, draggedItem);
+      setSlides(newSlides);
+      setSelectedSlide(index);
+      setDraggedSlide(null);
   };
 
   const addSlide = (templateType) => {
@@ -332,11 +353,15 @@ ${styleBlock}
             {slides.map((slide, index) => (
               <div
                 key={slide.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, index)}
                 className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors ${
                   selectedSlide === index 
                     ? 'bg-blue-50 border-2 border-blue-300' 
                     : 'bg-gray-100 hover:bg-gray-200 border-2 border-transparent'
-                }`}
+                } ${draggedSlide === index ? 'opacity-50' : ''}`}
                 onClick={() => setSelectedSlide(index)}
                 aria-current={selectedSlide === index}
               >
