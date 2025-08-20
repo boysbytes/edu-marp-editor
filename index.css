@@ -1,0 +1,79 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 
+ * Basic styles to mimic @tailwindcss/typography's 'prose' class.
+ * This ensures the preview pane has some basic formatting for markdown elements
+ * without needing the full plugin.
+ *
+ * These values have been adjusted to be more suitable for presentation slides,
+ * with tighter spacing and less extreme font size differences.
+ */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.prose h1 {
+  font-size: 1.6em; /* was 1.8em */
+  margin-bottom: 0.5em; /* was 0.8em */
+  margin-top: 0;
+}
+
+.prose h2 {
+  font-size: 1.25em; /* was 1.4em */
+  margin-bottom: 0.5em; /* was 0.7em */
+  margin-top: 0.8em; /* was 1.5em */
+}
+
+.prose h3 {
+  font-size: 1.1em; /* was 1.2em */
+  margin-bottom: 0.4em; /* was 0.6em */
+  margin-top: 1em; /* was 1.25em */
+}
+
+.prose p {
+  margin-bottom: 0.75em; /* was 1.25em */
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.75em;
+  margin-bottom: 0.75em; /* was 1.25em */
+}
+
+.prose li {
+  margin-top: 0.25em; /* was 0.5em */
+  margin-bottom: 0.25em; /* was 0.5em */
+}
+
+.prose li > p {
+  margin-top: 0.5em; /* was 0.75em */
+  margin-bottom: 0.5em; /* was 0.75em */
+}
+
+/* Styles for multi-column layouts */
+.prose .columns {
+  display: flex;
+  gap: 2rem;
+}
+
+.prose .columns > .col {
+  flex: 1;
+}
