@@ -1,0 +1,5 @@
+{
+  "name": "Marp Editor",
+  "description": "Create Marp files using an editor-like interface.",
+  "requestFramePermissions": []
+}
